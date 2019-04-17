@@ -1,0 +1,23 @@
+{
+  "name": "telegram-fyp-bot",
+  "version": "1.0.0",
+  "description": "An FYP telegram bot",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ratedd/telegram-fyp-bot.git"
+  },
+  "author": "Royston",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ratedd/telegram-fyp-bot/issues"
+  },
+  "homepage": "https://github.com/Ratedd/telegram-fyp-bot#readme",
+  "dependencies": {
+    "dotenv": "^7.0.0",
+    "telegraf": "^3.29.0"
+  }
+}
