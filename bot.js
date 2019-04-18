@@ -1,11 +1,11 @@
 require('dotenv').config();
 
-const Telegraf = require('telegraf');
-const sentry = require('@sentry/node');
-const AWS = require('aws-sdk');
 const express = require('express');
 const server = express();
 const { Counter, register } = require('prom-client');
+const Telegraf = require('telegraf');
+const sentry = require('@sentry/node');
+const AWS = require('aws-sdk');
 
 const prometheus = {
 	textCounter: new Counter({ name: 'text_count', help: 'Total text received' }),
@@ -17,12 +17,14 @@ server.get('/metrics', (req, res) => {
 	res.end(prometheus.register.metrics());
 });
 
+server.listen(3000);
+
 AWS.config.update({
 	region: process.env.REGION,
 	endpoint: process.env.AWS_ENDPOINT
 });
 
-const dynamodb = new AWS.DynamoDB();
+const db = new AWS.DynamoDB();
 
 sentry.init({ dsn: process.env.SENTRY_DSN });
 
@@ -48,7 +50,6 @@ bot.on('text', () => prometheus.textCounter.inc());
 // 		WriteCapacityUnits: 10
 // 	}
 // };
-server.listen(3000);
 bot.launch().then(() => {
 	// dynamodb.createTable(params, (err, data) => {
 	// 	if (err) {
