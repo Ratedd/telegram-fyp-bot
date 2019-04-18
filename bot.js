@@ -17,7 +17,13 @@ server.get('/metrics', (req, res) => {
 	res.end(prometheus.register.metrics());
 });
 
+sentry.init({ dsn: process.env.SENTRY_DSN });
+
 server.listen(3000);
+
+const bot = new Telegraf(process.env.BOT_TOKEN);
+
+bot.log = require('./util/logger.js');
 
 AWS.config.update({
 	region: process.env.REGION,
@@ -26,15 +32,8 @@ AWS.config.update({
 
 const db = new AWS.DynamoDB();
 
-sentry.init({ dsn: process.env.SENTRY_DSN });
-
-const bot = new Telegraf(process.env.BOT_TOKEN);
-
-bot.log = require('./util/logger.js');
-
 bot.start(ctx => ctx.reply('Hey there!'));
 bot.on('text', () => prometheus.textCounter.inc());
-
 // let params = {
 // 	TableName: 'Movies',
 // 	KeySchema: [
