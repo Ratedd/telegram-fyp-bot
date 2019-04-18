@@ -3,6 +3,19 @@ require('dotenv').config();
 const Telegraf = require('telegraf');
 const sentry = require('@sentry/node');
 const AWS = require('aws-sdk');
+const express = require('express');
+const server = express();
+const { Counter, register } = require('prom-client');
+
+const prometheus = {
+	textCounter: new Counter({ name: 'text_count', help: 'Total text received' }),
+	register
+};
+
+server.get('/metrics', (req, res) => {
+	res.set('Content-Type', prometheus.register.contentType);
+	res.end(prometheus.register.metrics());
+});
 
 AWS.config.update({
 	region: process.env.REGION,
@@ -18,6 +31,7 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 bot.log = require('./util/logger.js');
 
 bot.start(ctx => ctx.reply('Hey there!'));
+bot.on('text', () => prometheus.textCounter.inc());
 
 // let params = {
 // 	TableName: 'Movies',
@@ -34,7 +48,7 @@ bot.start(ctx => ctx.reply('Hey there!'));
 // 		WriteCapacityUnits: 10
 // 	}
 // };
-
+server.listen(3000);
 bot.launch().then(() => {
 	// dynamodb.createTable(params, (err, data) => {
 	// 	if (err) {
