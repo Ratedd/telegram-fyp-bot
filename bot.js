@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const { stripsIndents } = require('common-tags');
 const express = require('express');
 const server = express();
 const { Counter, register } = require('prom-client');
@@ -33,6 +34,16 @@ AWS.config.update({
 const db = new AWS.DynamoDB();
 
 bot.start(ctx => ctx.reply('Hey there!'));
+bot.help(ctx => {
+	const helpList = stripsIndents`Here are the list of commands available:
+		/test - Test Command
+	`;
+
+	return ctx.replyWithMarkdown(helpList, Telegraf.Extra.webPreview(false));
+}).catch(err => {
+	bot.log.error(err);
+	sentry.captureException(err);
+});
 bot.on('text', () => prometheus.textCounter.inc());
 // let params = {
 // 	TableName: 'Movies',
