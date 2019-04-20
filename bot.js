@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { stripsIndents } = require('common-tags');
+const { stripIndents } = require('common-tags');
 const express = require('express');
 const server = express();
 const { Counter, register } = require('prom-client');
@@ -9,11 +9,11 @@ const sentry = require('@sentry/node');
 const AWS = require('aws-sdk');
 
 const prometheus = {
-	textCounter: new Counter({ name: 'text_count', help: 'Total text received' }),
+	commandUsageCounter: new Counter({ name: 'command_usage_count', help: 'Total command usage' }),
 	register
 };
 
-server.get('/metrics', (req, res) => {
+server.get('/', (req, res) => {
 	res.set('Content-Type', prometheus.register.contentType);
 	res.end(prometheus.register.metrics());
 });
@@ -35,7 +35,8 @@ const db = new AWS.DynamoDB();
 
 bot.start(ctx => ctx.reply('Hey there!'));
 bot.help(ctx => {
-	const helpList = stripsIndents`Here are the list of commands available:
+	prometheus.commandUsageCounter.inc();
+	const helpList = stripIndents`Here are the list of commands available:
 		/test - Test Command
 	`;
 
@@ -44,7 +45,10 @@ bot.help(ctx => {
 	bot.log.error(err);
 	sentry.captureException(err);
 });
-bot.on('text', () => prometheus.textCounter.inc());
+bot.command('test', ctx => {
+	prometheus.commandUsageCounter.inc();
+	ctx.reply('Just a test command');
+});
 // let params = {
 // 	TableName: 'Movies',
 // 	KeySchema: [
