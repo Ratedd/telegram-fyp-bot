@@ -1,6 +1,5 @@
 require('dotenv').config();
 
-const { stripIndents } = require('common-tags');
 const fs = require('fs');
 const express = require('express');
 const server = express();
