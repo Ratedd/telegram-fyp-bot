@@ -21,6 +21,7 @@
     "chalk": "^2.4.2",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
+    "node-fetch": "^2.5.0",
     "prom-client": "^11.3.0",
     "telegraf": "^3.29.0",
     "winston": "^3.2.1",
