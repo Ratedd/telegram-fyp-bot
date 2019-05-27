@@ -21,7 +21,7 @@ server.get('/', (req, res) => {
 	res.end(prometheus.register.metrics());
 });
 
-server.listen(3000);
+server.listen(4000);
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 bot.log = require('./util/logger.js');
