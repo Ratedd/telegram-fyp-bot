@@ -32,7 +32,7 @@ bot.start(ctx => ctx.reply('Hey there!'));
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 
-	bot.commandCollection.set(command.name, command.description);
+	bot.commandCollection.set(command.name, command);
 
 	bot.command(command.name, ctx => {
 		prometheus.commandUsageCounter.inc();
@@ -43,8 +43,12 @@ for (const file of commandFiles) {
 bot.help(ctx => {
 	prometheus.commandUsageCounter.inc();
 	let helpList = '';
-	for (const [commandName, commandDesc] of bot.commandCollection.entries()) {
-		helpList += `/${commandName} - ${commandDesc}\r\n`;
+	for (const [commandName, command] of bot.commandCollection.entries()) {
+		if (command.args) {
+			helpList += `/${commandName} ${command.args} - ${command.description}\r\n`;
+		} else {
+			helpList += `/${commandName} - ${command.description}\r\n`;
+		}
 	}
 
 	return ctx.replyWithMarkdown(helpList, Telegraf.Extra.webPreview(false));
