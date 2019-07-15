@@ -27,7 +27,7 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 bot.log = require('./util/logger.js');
 bot.commandCollection = new Map();
 
-bot.start(ctx => ctx.reply('Hey there!'));
+bot.start(ctx => ctx.reply('Hey there! To see what I can do, type: /help !'));
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
