@@ -12,7 +12,8 @@ const commandFiles = fs.readdirSync('./commands');
 // sentry.init({ dsn: process.env.SENTRY_DSN });
 
 const prometheus = {
-	commandUsageCounter: new Counter({ name: 'command_usage_count', help: 'Total command usage' }),
+	commandUsageCounter: new Counter({ name: 'command_usage_count', help: 'Total times the different commands has been used' }),
+	helpCommandUsageCounter: new Counter({ name: 'help_command_usage_count', help: 'Total times the help command has been used' }),
 	register
 };
 
@@ -41,7 +42,7 @@ for (const file of commandFiles) {
 }
 
 bot.help(ctx => {
-	prometheus.commandUsageCounter.inc();
+	prometheus.helpCommandUsageCounter.inc();
 	let helpList = '';
 	for (const [commandName, command] of bot.commandCollection.entries()) {
 		if (command.args) {
