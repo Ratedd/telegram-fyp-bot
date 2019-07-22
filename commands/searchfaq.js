@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+const axios = require('axios');
 const { stripIndents } = require('common-tags');
 
 module.exports = {
@@ -13,20 +13,14 @@ module.exports = {
 			Usage: /searchfaq <keyword>
 			`);
 		}
-		const searchDetails = {
-			keyword: args[0]
-		};
-		const res = await fetch('http://localhost:3000/api/searchfaqbykeyword', { method: 'post', body: JSON.stringify(searchDetails) })
-			.catch(err => bot.log.error('[Command - searchfaq]\n', err));
-	
-		const data = await res.json();
-		if (!data.message) {
+		const response = await axios.post(`${process.env.API_SERVER}/api/searchfaqbykeyword`, { keyword: args[0] });
+		if (!response.data.message) {
 			let message = '';
-			for (let i = 0; i < data.length; i++) {
-				message += `/faq ${data[i].id}\r\n`
+			for (let i = 0; i < response.data.length; i++) {
+				message += `/faq ${response.data[i].moduleCode}\r\n`;
 			}
 			return ctx.reply(message);
 		}
-		return ctx.reply(data.message);
+		return ctx.reply(response.data.message);
 	}
 };
