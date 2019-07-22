@@ -15,7 +15,7 @@ module.exports = {
 		}
 		const response = await axios.post(`${process.env.API_SERVER}/api/searchfaqbykeyword`, { keyword: args[0] });
 		if (!response.data.message) {
-			let message = '';
+			let message = `List of FAQ(s) found with the keyword: ${args[0]}\r\n\r\n`;
 			for (let i = 0; i < response.data.length; i++) {
 				message += `/faq ${response.data[i].moduleCode}\r\n`;
 			}
