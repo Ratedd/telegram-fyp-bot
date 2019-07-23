@@ -5,7 +5,7 @@ module.exports = {
 	name: 'faq',
 	description: 'Sends the faq you specified',
 	args: '<faqIndex>',
-	async execute(bot, ctx) { // eslint-disable-line no-unused-vars
+	async execute(bot, ctx) {
 		const args = ctx.message.text.slice('/'.length).trim().split(/ +/g);
 		args.shift().toLowerCase();
 		if (!args.length) {

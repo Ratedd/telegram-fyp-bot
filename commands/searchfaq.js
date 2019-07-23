@@ -5,7 +5,7 @@ module.exports = {
 	name: 'searchfaq',
 	description: 'Search for FAQ with provided keyword',
 	args: '<keyword>',
-	async execute(bot, ctx) { // eslint-disable-line no-unused-vars
+	async execute(bot, ctx) {
 		const args = ctx.message.text.slice('/'.length).trim().split(/ +/g);
 		args.shift().toLowerCase();
 		if (!args.length) {
